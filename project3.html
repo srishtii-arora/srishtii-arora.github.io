@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        body {
+            
+            text-align: center;
+            background-color: #ffeded;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #560808;
+            font-size: 4rem;
+        }
+
+        .calculator {
+            width: 500px;
+            height:450px;
+            margin: 50px auto;
+            background-color: #ffadd2;
+            border-radius: 10px;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            text-align: right;
+        }
+
+        .result {
+            font-size: 2.0rem;
+            color: #381624c2;
+            margin-bottom: 10px;
+            font-style: bold;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .button {
+            background-color: #ffe1e1;
+            color: #ff0062;
+            font-size: 2.0rem;
+            font-style:bold;
+            padding: 10px;
+            border-radius: 5px;
+            border-color: #560808;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #bbfbfdc9;
+        }
+    </style>
+</head>
+<body>
+    <h1> Calculator</h1>
+    <div class="calculator">
+        <div class="result" id="result">0</div>
+        <div class="buttons">
+            <button class="button" onclick="clearResult()">C</button>
+            <button class="button" onclick="appendToResult('7')">7</button>
+            <button class="button" onclick="appendToResult('8')">8</button>
+            <button class="button" onclick="appendToResult('9')">9</button>
+            <button class="button" onclick="appendToResult('4')">4</button>
+            <button class="button" onclick="appendToResult('5')">5</button>
+            <button class="button" onclick="appendToResult('6')">6</button>
+            <button class="button" onclick="appendToResult('1')">1</button>
+            <button class="button" onclick="appendToResult('2')">2</button>
+            <button class="button" onclick="appendToResult('3')">3</button>
+            <button class="button" onclick="appendToResult('0')">0</button>
+            <button class="button" onclick="appendToResult('.')">.</button>
+            <button class="button" onclick="performOperation('+')">+</button>
+            <button class="button" onclick="performOperation('-')">-</button>
+            <button class="button" onclick="performOperation('*')">*</button>
+            <button class="button" onclick="performOperation('/')">/</button>
+            <button class="button" onclick="calculateResult()">=</button>
+        </div>
+    </div>
+
+    <script>
+        let currentResult = '0';
+        let currentOperation = null;
+        let waitingForOperand = false;
+
+        function updateResult() {
+            const resultElement = document.getElementById('result');
+            resultElement.textContent = currentResult;
+        }
+
+        function appendToResult(value) {
+            if (waitingForOperand) {
+                currentResult = value;
+                waitingForOperand = false;
+            } else {
+                currentResult = currentResult === '0' ? value : currentResult + value;
+            }
+            updateResult();
+        }
+
+        function clearResult() {
+            currentResult = '0';
+            currentOperation = null;
+            waitingForOperand = false;
+            updateResult();
+        }
+
+        function performOperation(operation) {
+            if (currentOperation !== null && waitingForOperand) {
+                currentOperation = operation;
+                return;
+            }
+
+            if (currentOperation !== null) {
+                calculateResult();
+            }
+
+            currentOperation = operation;
+            waitingForOperand = true;
+        }
+
+        function calculateResult() {
+            if (currentOperation === null || waitingForOperand) {
+                return;
+            }
+
+            switch (currentOperation) {
+                case '+':
+                    currentResult = (parseFloat(currentResult) + parseFloat(currentResult)).toString();
+                    break;
+                case '-':
+                    currentResult = (parseFloat(currentResult) - parseFloat(currentResult)).toString();
+                    break;
+                case '*':
+                    currentResult = (parseFloat(currentResult) * parseFloat(currentResult)).toString();
+                    break;
+                case '/':
+                    currentResult = (parseFloat(currentResult) / parseFloat(currentResult)).toString();
+                    break;
+            }
+
+            currentOperation = null;
+            waitingForOperand = false;
+            updateResult();
+        }
+    </script>
+</body>
+</html>
